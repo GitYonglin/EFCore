@@ -27,6 +27,31 @@ namespace EF.MySQL.Migrations
                     b.ToTable("Blog");
                 });
 
+            modelBuilder.Entity("EF.MySQL.Models.BlogCategory", b =>
+                {
+                    b.Property<int>("BlogId");
+
+                    b.Property<int>("CategoryId");
+
+                    b.HasKey("BlogId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BlogCategory");
+                });
+
+            modelBuilder.Entity("EF.MySQL.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("EF.MySQL.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
@@ -43,6 +68,19 @@ namespace EF.MySQL.Migrations
                     b.HasIndex("BlogId");
 
                     b.ToTable("Post");
+                });
+
+            modelBuilder.Entity("EF.MySQL.Models.BlogCategory", b =>
+                {
+                    b.HasOne("EF.MySQL.Models.Blog", "Blog")
+                        .WithMany("BlogCategorys")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EF.MySQL.Models.Category", "Category")
+                        .WithMany("BlogCategorys")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EF.MySQL.Models.Post", b =>

@@ -1,0 +1,32 @@
+﻿@model List<Category>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>分类</title>
+</head>
+<body>
+    <h1>分类</h1>
+
+    <form asp-action="/category" method="post">
+        <div>
+            <span>name：</span>
+            <input type="text" name="category.name" />
+        </div>
+        <button type="submit">提交保存</button>
+    </form>
+    <p>@Model.Count</p>
+    @foreach (var item in Model)
+    {
+        <h3>@item.Name</h3>
+        <ul>
+                @foreach (var b in item.BlogCategorys)
+                {
+                    if (b.Blog!=null)
+                    {
+                        <li>@b.Blog.Url</li>
+                    }
+                }
+        </ul>
+    }
+</body>
+</html>
