@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MySQL.Data.Entity.Extensions;
 
@@ -47,6 +47,8 @@ namespace EF.MySQL
             //链接数据库
             services.AddDbContext<Model>(options => options.UseMySQL(sqlConnectionString));
             //依赖注入
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,10 +61,17 @@ namespace EF.MySQL
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
+            app.UseMvc(routes => 
             {
-                await context.Response.WriteAsync("Hello World!");
+                routes.MapRoute(
+                name: "default", 
+                template: "{controller=Home}/{action=index}/{id?}");
             });
+
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
         }
     }
 }

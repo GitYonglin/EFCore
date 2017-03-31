@@ -23,6 +23,26 @@ namespace EF.MySQL.Models
         // 生成数据库类设置
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Category> Categorys { get; set; }
+        /// <summary>
+        /// 第三张表设置
+        /// </summary>
+        /// <param name="ModelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder ModelBuilder)
+        {
+            ModelBuilder.Entity<BlogCategory>()
+                .HasKey(b => new { b.BlogId, b.CategoryId });
+
+            ModelBuilder.Entity<BlogCategory>()
+                .HasOne(bc => bc.Blog)
+                .WithMany(b => b.BlogCategorys)
+                .HasForeignKey(bc => bc.BlogId);
+
+            ModelBuilder.Entity<BlogCategory>()
+                .HasOne(bc => bc.Category)
+                .WithMany(b => b.BlogCategorys)
+                .HasForeignKey(bc => bc.CategoryId);
+        }
     }
     public class Blog
     {
@@ -31,6 +51,8 @@ namespace EF.MySQL.Models
 
         //一对多关系
         public List<Post> Posts { get; set; }
+        // 多对多第三张表依赖
+        public List<BlogCategory> BlogCategorys { get; set; }
     }
 
     public class Post
@@ -42,5 +64,27 @@ namespace EF.MySQL.Models
         //一对多关系
         public int BlogId { get; set; }
         public Blog Blog { get; set; }
+    }
+    /// <summary>
+    /// 分类
+    /// </summary>
+    public class Category
+    {
+        public int CategoryId { get; set; }
+        public string Name { get; set; }
+
+
+        public List<BlogCategory> BlogCategorys { get; set; }
+    }
+    /// <summary>
+    /// 第三张表
+    /// </summary>
+    public class BlogCategory
+    {
+        public int BlogId { get; set; }
+        public Blog Blog { get; set; }
+
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }

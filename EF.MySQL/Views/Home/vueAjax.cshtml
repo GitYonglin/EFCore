@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>VueAjax</title>
+</head>
+<body>
+    <h1>VueAjax</h1>
+    <div id="app">
+        <div>
+            <span>Url:</span>
+            <input type="text" :v-model="blog.url" />
+        </div>
+        <br />
+        @*Vue便利Html*@
+        <div v-for="(post,index) in blog.posts">
+            <p>{{index}}</p>
+            <span>Title:</span>
+            <input type="text" v-model="post.title" />
+            <span>content:</span>
+            <input type="text" v-model="post.content" />
+        </div>
+        <button @@click="addPost">添加一组</button>
+        <button @@click="post">提交保存</button>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="https://unpkg.com/vue@2.2.6/dist/vue.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+
+<script type="text/javascript">
+    var vuepost = {
+        data() {
+            return {
+                blog: {
+                    url: '',
+                    posts: [{
+                        title: '',
+                        content: '',
+                    }]
+                },
+            }
+        },
+        methods: {
+            addPost() {
+                console.log('添加一组数据')
+                this.blog.posts.push({
+                    title: '',
+                    content: '',
+                })
+            },
+            //ajax发送json数据库可以在后台使用类实体接收数据
+            post() {
+                var blog = this._data.blog
+                console.log(blog)
+                $.ajax({
+                    type: "POST",
+                    url: '/home/vueAjax',
+                    data: blog
+                });
+            }
+
+        }
+    }
+    var Crot = Vue.extend(vuepost)
+    new Crot().$mount('#app')
+</script>
